@@ -1,0 +1,13 @@
+1.学生
+    功能：登录、参加考试
+2.教师：
+    功能：新增学生、新增班级、将学生添加到班级、新增题目、新增试卷
+
+student学生表：id、name、password、cid(班级id外键)
+teacher教师表：id、name、password
+clazz班级表：id、name
+topic题目表：id(自增)、题干question、选项option、答案answer、解析analysis、tid(类型id外键)、lid(难度id外键)、sid(阶段id外键)
+testpaper试卷表：id、name、time、snums、dnums、cid(班级id外键)、lid(难度id外键)、sid(阶段id外键)、tids(题目id的拼接串，如1,2,5,6,8,...)、总分
+level难度表：id、name（简单、中等、困难）
+stage阶段表：id、name（javase、javaweb、框架、微服务）
+type类型表：id、name、分值
