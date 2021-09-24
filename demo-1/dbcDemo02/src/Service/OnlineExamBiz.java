@@ -4,6 +4,10 @@ import bean.*;
 import dao.*;
 import dao.impl.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -624,6 +628,11 @@ public class OnlineExamBiz {
             System.out.println("你的答案为：" + stu_opts[i]);
             System.out.println("解析："+topics.get(i).getAnalysis());
         }
+        try {
+            downLoad(exam_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void updatePsw() {
@@ -643,5 +652,41 @@ public class OnlineExamBiz {
             }
         } while (turnBack);
         System.out.println("密码修改成功！");
+    }
+
+    public void downLoad(int exam_id) throws Exception {
+        System.out.println("是否保存该试卷至本地？(y/n)");
+        String ans = input.next();
+        if(ans.equals("y")){
+            Exam exam = examDao.findExamById(exam_id);
+            String topics_id = exam.getTopicsId();
+            String[] topicsId = topics_id.split(",");   //得到各道题号
+            List<Topic> topics = new ArrayList<Topic>();   //保存该试卷的所有题目
+            for (String topicId : topicsId) {
+                int topic_Id = Integer.parseInt(topicId);
+                topics.add(topicDao.findTopicById(topic_Id));
+            }
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd,HHmmss");
+            String now = sf.format(new Date());
+            Writer w = new FileWriter("C:\\Users\\JCHEN\\Desktop\\"+exam.getExam_name()+"("+now+").doc",true);
+            BufferedWriter bw = new BufferedWriter(w);
+            for (int i = 0; i < topics.size(); i++) {
+                bw.write(i + 1 + "." + topics.get(i).getQuestion()+"("+exam.getScore()+"分)");
+                if (topics.get(i).getTid() == 1) {
+                    bw.write("(单选题)\n");
+                } else if (topics.get(i).getTid() == 2) {
+                    bw.write("(多选题)\n");
+                }
+                String[] topic_opts = topics.get(i).getOptions().split(" ");
+                for (String opt : topic_opts) {
+                    bw.write(opt+"\n");
+                }
+                bw.write("正确答案为：" + topics.get(i).getAnswer()+"\n解析："+topics.get(i).getAnalysis()+"\n\n");
+                bw.flush();
+            }
+            bw.close();
+            w.close();
+            System.out.println("试卷下载成功！");
+        }
     }
 }
