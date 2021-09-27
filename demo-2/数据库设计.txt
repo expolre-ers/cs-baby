@@ -1,0 +1,20 @@
+学生：登录、修改密码、看课表、抢选修课、给老师评分、查看考试信息
+教学老师：登录、上报自己要教的课，开选修课(面向专业、人数)、新建考试
+教务老师：登录、排课、排教室、排考场、录成绩、管理学生信息（包括增删改查）
+
+数据库设计：
+	1.学生班级表stu_cls:id、cid（班级id）、stu_id(学生id)
+	2.用户表users：id、password、name、rid(角色id)、col_id
+	3.角色role：id、name(1.教学老师  2.教务老师 3.学生)
+	4.课程course：id、name、ctid(课程类型id)、mid(面向专业；0不限)、time上课时间、ro_id上课地点、tea_id老师id、limit人数、maj_id专业id
+	5.课程类型ctype：id、ctype(1.选修 2.专业课)
+	6.选课情况choose：id、cid(课程id)、sid(学生id)、cre_time选课时间
+	7.院系college：id、name
+	8.专业major：id、name、colid(院系id)
+	9.班级classes：id、name、mid(专业id)
+	10.评教eteaching：id、sid(学生id)、tid(教师id)、point(分数)、ro_id考场
+	11.考试exam：id、name、edate、elong、cid(班级)、cou_id(课程id)
+	12.成绩score：id、point、exam_id、stu_id
+	13.教室：id、name、addr
+	
+	
